@@ -4,7 +4,7 @@ import Container from '../../Components/Container/Container';
 import CoverTable from '../../Components/CoverTable/CoverTable';
 import StatsDescription from '../../Components/StatsDescription/StatsDescription';
 import './StatsPage.css';
-import api from '../../Services/Service';
+import lastfmApi from '../../Services/LastFmApi';
 
 const StatsPage = () => {
     const [albumsData, setAlbumsData] = useState();
@@ -16,7 +16,8 @@ const StatsPage = () => {
 
     async function loadAlbuns() {
         try {
-            const promise = await api.get(`https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=gutineos&period=12month&limit=20&api_key=${process.env.REACT_APP_API_KEY}&format=json`);
+            const promise = await lastfmApi.get(`?method=user.gettopalbums&user=gutineos&period=12month&limit=20&api_key=${process.env.REACT_APP_LASTFM_APIKEY}&format=json`);
+            console.log(promise.data);
             setAlbumsData(promise.data.topalbums.album);
         } catch (error) {
             console.log(error);

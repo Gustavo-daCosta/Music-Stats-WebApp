@@ -1,0 +1,9 @@
+.music-card {
+    /* border: 2px solid blue; */
+    display: flex;
+    flex-direction: column;
+}
+
+.music-card img {
+    width: 205px;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MainContent from '../../Components/MainContent/MainContent';
 import Container from '../../Components/Container/Container';
-import api from '../../Services/Service';
+import lastfmApi from '../../Services/LastFmApi';
 
 const HomePage = () => {
     const [userPicture, setUserPicture] = useState("");
@@ -14,7 +14,8 @@ const HomePage = () => {
 
     async function loadUserData() {
         try {
-            const promise = (await api.get(`/?method=user.getinfo&user=gutineos&api_key=${process.env.REACT_APP_API_KEY}&format=json`)).data.user;
+            const promise = (await lastfmApi.get(`/?method=user.getinfo&user=gutineos&api_key=${process.env.REACT_APP_LASTFM_APIKEY}&format=json`)).data.user;
+            console.log(promise);
             setUsername(promise.name);
             setUserPicture(promise.image[2]['#text']);
             setPlayCount(parseInt(promise.playcount));
