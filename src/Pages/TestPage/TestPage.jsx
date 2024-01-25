@@ -7,19 +7,20 @@ import spotifyApi from '../../Services/SpotifyApi';
 import './TestPage.css';
 
 const TestPage = () => {
+    const [musicId, setMusicId] = useState("5VW3BRwYhsqfZYRi90UzfR");
     const [name, setName] = useState("");
     const [albumName, setAlbumName] = useState("");
     const [image, setImage] = useState("");
     const [artist, setArtist] = useState("");
     const [authToken, setAuthToken] = useState("");
-
+    
     useEffect(() => {
         getToken();
     }, []);
-
-    // useEffect(() => {
-    //     loadArtists();
-    // }, [name]);
+    
+    useEffect(() => {
+        loadTrack();
+    }, [musicId]);
 
     const getToken = async () => {
         const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -53,9 +54,16 @@ const TestPage = () => {
         }
     }
 
-    async function loadArtists() {
+    async function loadTrack() {
         try {
-            const promise = await spotifyApi.get("/tracks/6luBKkFUt5wTwz7hpLhp12");
+            const headers = { 'Authorization': 'Bearer ' + authToken }
+            const promise = await spotifyApi.get(
+                // "/tracks/0sHSFzglnJ1b9mILzQ7ifJ",
+                '/tracks/' + musicId,
+                { headers: headers }
+            );
+            console.log(promise.data);
+
             setName(promise.data.name);
             setAlbumName(promise.data.album.name);
             setImage(promise.data.album.images[1].url);
@@ -75,13 +83,17 @@ const TestPage = () => {
                         <p>{albumName}</p>
                         <h3 className="artist">{artist}</h3>
                     </div>
-                </Container>
-            </section>
-            <section className="token-test">
-                <Container>
-                    <div className="token-info">
-                        <button onClick={console.log("teste")}>Gerar token</button>
-                    </div>
+                    <form action="" onSubmit={(() => {setMusicId()})}>
+                        <label htmlFor="musicId">Id da música</label>
+                        <input
+                            id='musicId'
+                            name='musicId'
+                            type='text'
+                            value={musicId}
+                            onChange={(() => {setMusicId()})}
+                        />
+                        <button type='submit'>Enviar</button>
+                    </form>
                 </Container>
             </section>
         </MainContent>

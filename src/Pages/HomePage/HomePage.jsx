@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import MainContent from '../../Components/MainContent/MainContent';
 import Container from '../../Components/Container/Container';
 import lastfmApi from '../../Services/LastFmApi';
+import spotifyApi from '../../Services/SpotifyApi';
 
 const HomePage = () => {
+    const [userToken, setUserToken] = useState("");
     const [userPicture, setUserPicture] = useState("");
     const [username, setUsername] = useState("");
     const [playCount, setPlayCount] = useState(0);
@@ -22,6 +24,29 @@ const HomePage = () => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const getClientCredentials = () => {
+        const client_id = process.env.REACT_APP_CLIENT_ID;
+        const client_secret = process.env.REACT_APP_CLIENT_SECRET;
+    
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+            },
+            form: {
+                grant_type: 'client_credentials'
+            },
+            json: true,
+        };
+
+        spotifyApi.post(authOptions, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+                console.log(body);
+                setUserToken(body.access_token);
+            }
+        })
     }
 
     return (
